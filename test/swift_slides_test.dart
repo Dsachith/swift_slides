@@ -1,5 +1,7 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:swift_slides/src/swift_slides_base.dart';
 import 'package:swift_slides/swift_slides.dart';
-import 'package:test/test.dart';
+
 
 void main() {
   group('A group of tests', () {
