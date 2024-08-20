@@ -41,7 +41,7 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.infiniteScroll ? widget.items.length : 0;
+    _currentIndex = widget.items.length; // Start at the "virtual" first page for infinite scroll
     _pageController = PageController(initialPage: _currentIndex);
 
     if (widget.autoPlay) {
@@ -53,8 +53,8 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
     _autoPlayTimer = Timer.periodic(widget.autoPlayInterval, (timer) {
       if (_pageController.hasClients) {
         int nextPage = _currentIndex + 1;
-        if (nextPage == widget.items.length * (widget.infiniteScroll ? 2 : 1)) {
-          nextPage = widget.infiniteScroll ? widget.items.length : 0;
+        if (nextPage >= widget.items.length * 2) {
+          nextPage = widget.items.length; // Loop back to the first item
         }
         _pageController.animateToPage(
           nextPage,
@@ -84,7 +84,7 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
             itemCount: widget.items.length * (widget.infiniteScroll ? 2 : 1),
             onPageChanged: (index) {
               setState(() {
-                _currentIndex = index;
+                _currentIndex = index % widget.items.length;
               });
             },
             itemBuilder: (context, index) {
@@ -107,14 +107,10 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
           return AnimatedContainer(
             duration: Duration(milliseconds: 300),
             margin: EdgeInsets.symmetric(horizontal: 4.0),
-            width: _currentIndex % widget.items.length == index
-                ? widget.indicatorSize * 1.5
-                : widget.indicatorSize,
+            width: _currentIndex == index ? widget.indicatorSize * 1.5 : widget.indicatorSize,
             height: widget.indicatorSize,
             decoration: BoxDecoration(
-              color: _currentIndex % widget.items.length == index
-                  ? widget.indicatorColor
-                  : widget.indicatorColor.withOpacity(0.5),
+              color: _currentIndex == index ? widget.indicatorColor : widget.indicatorColor.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
           );
