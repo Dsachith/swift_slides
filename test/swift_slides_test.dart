@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:swift_slides/src/swift_slides_base.dart';
-import 'package:swift_slides/swift_slides.dart';
 
 
 void main() {
