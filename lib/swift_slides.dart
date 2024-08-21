@@ -35,13 +35,12 @@ class AdvancedCarousel extends StatefulWidget {
 
 class _AdvancedCarouselState extends State<AdvancedCarousel> {
   late PageController _pageController;
-  late int _currentIndex;
+  int _currentIndex = 0;
   Timer? _autoPlayTimer;
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.items.length; // Start at the "virtual" first page for infinite scroll
     _pageController = PageController(initialPage: _currentIndex);
 
     if (widget.autoPlay) {
@@ -53,14 +52,18 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
     _autoPlayTimer = Timer.periodic(widget.autoPlayInterval, (timer) {
       if (_pageController.hasClients) {
         int nextPage = _currentIndex + 1;
-        if (nextPage >= widget.items.length * 2) {
-          nextPage = widget.items.length; // Loop back to the first item
+
+        if (nextPage < widget.items.length) {
+          // Normal forward scroll
+          _pageController.animateToPage(
+            nextPage,
+            duration: widget.transitionDuration,
+            curve: widget.transitionCurve,
+          );
+        } else {
+          // Loop back to the first item
+          _pageController.jumpToPage(0);
         }
-        _pageController.animateToPage(
-          nextPage,
-          duration: widget.transitionDuration,
-          curve: widget.transitionCurve,
-        );
       }
     });
   }
@@ -81,15 +84,14 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
           height: widget.height,
           child: PageView.builder(
             controller: _pageController,
-            itemCount: widget.items.length * (widget.infiniteScroll ? 2 : 1),
+            itemCount: widget.items.length,
             onPageChanged: (index) {
               setState(() {
-                _currentIndex = index % widget.items.length;
+                _currentIndex = index;
               });
             },
             itemBuilder: (context, index) {
-              final actualIndex = index % widget.items.length;
-              return widget.items[actualIndex];
+              return widget.items[index];
             },
           ),
         ),
@@ -105,12 +107,16 @@ class _AdvancedCarouselState extends State<AdvancedCarousel> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(widget.items.length, (index) {
           return AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 100),
             margin: EdgeInsets.symmetric(horizontal: 4.0),
-            width: _currentIndex == index ? widget.indicatorSize * 1.5 : widget.indicatorSize,
+            width: _currentIndex == index
+                ? widget.indicatorSize * 1.5
+                : widget.indicatorSize,
             height: widget.indicatorSize,
             decoration: BoxDecoration(
-              color: _currentIndex == index ? widget.indicatorColor : widget.indicatorColor.withOpacity(0.5),
+              color: _currentIndex == index
+                  ? widget.indicatorColor
+                  : widget.indicatorColor.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
           );
