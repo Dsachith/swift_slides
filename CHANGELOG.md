@@ -1,17 +1,22 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-## [1.0.1] - 2024-08-21
-
-### Changed
-
-- Improved carousel behavior to loop from the last item to the first item seamlessly.
-- Fixed the issue where the carousel was going backward instead of looping forward.
-
-## [1.0.0] - 2024-08-20
+## [1.0.2] - 2024-08-21
 
 ### Added
 
-- Initial release of the `swift_slides` package.
-- Added support for auto-play, infinite scroll, and customizable indicators.
+- Added seamless looping feature to the carousel for auto-play mode.
+- Improved performance of the carousel's page transitions.
+- Updated documentation for better clarity.
+
+### Fixed
+
+- Fixed an issue where the carousel would transition step-by-step in reverse after reaching the last item.
+
+## [1.0.1] - 2024-07-30
+
+### Added
+
+- Auto-play feature for the carousel.
+- Customizable indicators for the carousel.
+
+## [1.0.0] - 2024-07-15
+
+- Initial release of `swift_slides` package with basic carousel functionality.
